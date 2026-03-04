@@ -43,9 +43,11 @@ class ModelErrorBoundary extends React.Component<{ children: React.ReactNode }, 
 interface SceneMapProps {
     currentView: View;
     onSelectView: (view: View) => void;
+    isFullScreen?: boolean;
+    onToggleFullScreen?: () => void;
 }
 
-export default function SceneMap({ currentView, onSelectView }: SceneMapProps) {
+export default function SceneMap({ currentView, onSelectView, isFullScreen, onToggleFullScreen }: SceneMapProps) {
     const [hoveredView, setHoveredView] = useState<View | null>(null);
 
     return (
@@ -66,45 +68,56 @@ export default function SceneMap({ currentView, onSelectView }: SceneMapProps) {
                     </group>
 
                     <ContactShadows position={[0, -0.51, 0]} opacity={0.5} scale={15} blur={2.5} far={4} color="#1e293b" />
-                    <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} enablePan={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2 + 0.1} />
+                    <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} enablePan={true} minPolarAngle={0} maxPolarAngle={Math.PI / 2 + 0.1} />
                     <Environment preset="city" />
                 </Canvas>
             </ModelErrorBoundary>
 
-            {/* Floating Hover Label */}
-            {hoveredView && (
-                <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white/95 shadow-lg text-slate-800 px-4 py-2 rounded-full pointer-events-none transition-all duration-200 ease-out z-10 flex items-center gap-2 border border-slate-100">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-                    <span className="font-medium whitespace-nowrap">{hoveredView.label}</span>
-                    <span className="text-xs text-slate-400 ml-1 hidden sm:inline">| Click para ver</span>
-                </div>
-            )}
+            {/* Floating Hover Label (REMOVED as requested) */}
 
             {/* Interior Sites Menu */}
-            <div className="absolute top-1/2 right-4 transform -translate-y-1/2 flex flex-col gap-2 z-10">
-                <p className="text-[10px] sm:text-xs text-slate-800 font-bold mb-1 uppercase tracking-wider text-right">Zonas Interiores</p>
-                {views.filter(v => v.id.startsWith('interior')).map(view => (
-                    <button
-                        key={view.id}
-                        className={`text-xs px-3 py-1.5 rounded-lg text-right font-medium transition-colors shadow-sm
-                            ${currentView.id === view.id
-                                ? 'bg-blue-600 text-white border-blue-600'
-                                : 'bg-white/90 text-slate-700 hover:bg-white border-slate-200'} border`}
-                        onClick={() => onSelectView(view)}
-                        onMouseEnter={() => setHoveredView(view)}
-                        onMouseLeave={() => setHoveredView(null)}
-                    >
-                        {view.label}
-                    </button>
-                ))}
+            <div className="absolute top-2 left-2 md:top-auto md:left-auto md:bottom-2 md:right-2 flex flex-col md:items-end gap-1 md:gap-1.5 z-10 pointer-events-auto max-w-[95%] md:max-w-[180px]">
+                <p className="text-[9px] text-slate-300 md:text-slate-400 font-bold mb-0.5 md:mb-0 uppercase tracking-wider text-left md:text-right shrink-0">
+                    Interiores
+                </p>
+                <div className="flex flex-row flex-wrap md:justify-end gap-1 max-w-[80vw] md:max-w-full">
+                    {views.filter(v => v.id.startsWith('interior')).map(view => (
+                        <button
+                            key={view.id}
+                            className={`text-[9px] px-2 py-1 md:px-1.5 md:py-0.5 rounded-md text-left md:text-center font-medium transition-colors shadow-sm border backdrop-blur-md shrink-0
+                                ${currentView.id === view.id
+                                    ? 'bg-blue-600 text-white border-blue-500 shadow-blue-900/50'
+                                    : 'bg-slate-700/80 text-slate-200 hover:bg-slate-600 border-slate-600/80 md:bg-slate-800/70 md:text-slate-200 md:hover:bg-slate-700/80 md:border-slate-600/70'}`}
+                            onClick={() => onSelectView(view)}
+                            onMouseEnter={() => setHoveredView(view)}
+                            onMouseLeave={() => setHoveredView(null)}
+                        >
+                            {view.label}
+                        </button>
+                    ))}
+                </div>
             </div>
 
-            {/* Instructions */}
-            <div className="absolute bottom-6 w-full flex justify-center pointer-events-none px-4">
-                <p className="bg-white/80 backdrop-blur text-slate-600 text-[11px] sm:text-xs px-4 py-2 rounded-full shadow-sm text-center">
-                    Gira el modelo y haz clic en las caras brillantes o en el menú
-                </p>
-            </div>
+            {/* Toggle Fullscreen Button (Bottom Left on 3D Canvas) */}
+            {onToggleFullScreen && (
+                <button
+                    onClick={onToggleFullScreen}
+                    className="absolute bottom-2 left-2 md:bottom-4 md:left-4 z-50 bg-slate-800/80 backdrop-blur-md text-white p-2 md:p-3 rounded-full border border-slate-600/50 hover:bg-slate-700/90 transition-all shadow-lg pointer-events-auto flex items-center justify-center"
+                    title={isFullScreen ? "Minimizar Modelo 3D" : "Expandir Modelo 3D"}
+                >
+                    {isFullScreen ? (
+                        <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 3v3h-3m16 0h-3v-3M3 16h3v3m15 0v-3h-3m-6-8l-4-4m14 4l-4-4M4 20l4-4m12 4l-4-4" />
+                        </svg>
+                    ) : (
+                        <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                        </svg>
+                    )}
+                </button>
+            )}
+
+
         </div>
     );
 }
@@ -174,8 +187,32 @@ function BuildingModel({
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'front')}
                 >
-                    <planeGeometry args={[6.6, 4.4]} />
+                    <planeGeometry args={[4.0, 4.4]} />
                     <meshStandardMaterial {...getMaterialOptions('front')} />
+                </mesh>
+
+                {/* Esquina Frontal-Izquierda (Front-Left Face) */}
+                <mesh
+                    position={[-2.3, 0, 2.3]}
+                    rotation={[0, -Math.PI / 4, 0]}
+                    onPointerOver={(e) => handlePointerOver(e, 'front_left')}
+                    onPointerOut={handlePointerOut}
+                    onClick={(e) => handleClick(e, 'front_left')}
+                >
+                    <planeGeometry args={[3.0, 4.4]} />
+                    <meshStandardMaterial {...getMaterialOptions('front_left')} />
+                </mesh>
+
+                {/* Esquina Frontal-Derecha (Front-Right Face) */}
+                <mesh
+                    position={[2.3, 0, 2.3]}
+                    rotation={[0, Math.PI / 4, 0]}
+                    onPointerOver={(e) => handlePointerOver(e, 'front_right')}
+                    onPointerOut={handlePointerOut}
+                    onClick={(e) => handleClick(e, 'front_right')}
+                >
+                    <planeGeometry args={[3.0, 4.4]} />
+                    <meshStandardMaterial {...getMaterialOptions('front_right')} />
                 </mesh>
 
                 {/* Vista Izquierda (Left Face) */}
@@ -186,7 +223,7 @@ function BuildingModel({
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'left')}
                 >
-                    <planeGeometry args={[6.6, 4.4]} />
+                    <planeGeometry args={[4.0, 4.4]} />
                     <meshStandardMaterial {...getMaterialOptions('left')} />
                 </mesh>
 
@@ -198,8 +235,32 @@ function BuildingModel({
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'right')}
                 >
-                    <planeGeometry args={[6.6, 4.4]} />
+                    <planeGeometry args={[4.0, 4.4]} />
                     <meshStandardMaterial {...getMaterialOptions('right')} />
+                </mesh>
+
+                {/* Esquina Trasera-Izquierda (Back-Left Face) */}
+                <mesh
+                    position={[-2.3, 0, -2.3]}
+                    rotation={[0, -Math.PI * 0.75, 0]}
+                    onPointerOver={(e) => handlePointerOver(e, 'back_left')}
+                    onPointerOut={handlePointerOut}
+                    onClick={(e) => handleClick(e, 'back_left')}
+                >
+                    <planeGeometry args={[3.0, 4.4]} />
+                    <meshStandardMaterial {...getMaterialOptions('back_left')} />
+                </mesh>
+
+                {/* Esquina Trasera-Derecha (Back-Right Face) */}
+                <mesh
+                    position={[2.3, 0, -2.3]}
+                    rotation={[0, Math.PI * 0.75, 0]}
+                    onPointerOver={(e) => handlePointerOver(e, 'back_right')}
+                    onPointerOut={handlePointerOut}
+                    onClick={(e) => handleClick(e, 'back_right')}
+                >
+                    <planeGeometry args={[3.0, 4.4]} />
+                    <meshStandardMaterial {...getMaterialOptions('back_right')} />
                 </mesh>
 
                 {/* Vista Trasera (Back Face) */}
@@ -210,7 +271,7 @@ function BuildingModel({
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'back')}
                 >
-                    <planeGeometry args={[6.6, 4.4]} />
+                    <planeGeometry args={[4.0, 4.4]} />
                     <meshStandardMaterial {...getMaterialOptions('back')} />
                 </mesh>
 
