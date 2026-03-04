@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { View } from '@/data/views';
 
 interface ViewerProps {
@@ -32,13 +33,23 @@ export default function Viewer({ currentView, isFullScreen, onToggleFullScreen }
                 <span className="text-xl font-light tracking-widest">CARGANDO RENDER...</span>
             </div>
 
-            <Image
-                src={displayedImage}
-                alt={currentView.label}
-                fill
-                className={`object-cover transition-opacity duration-300 ease-in-out ${fade ? 'opacity-100' : 'opacity-0'
-                    }`}
-            />
+            <TransformWrapper
+                initialScale={1}
+                minScale={1}
+                maxScale={4}
+                centerOnInit={true}
+                wheel={{ step: 0.1 }}
+            >
+                <TransformComponent wrapperClass="!w-full !h-full absolute inset-0" contentClass="!w-full !h-full">
+                    <Image
+                        src={displayedImage}
+                        alt={currentView.label}
+                        fill
+                        className={`object-contain transition-opacity duration-300 ease-in-out ${fade ? 'opacity-100' : 'opacity-0'
+                            }`}
+                    />
+                </TransformComponent>
+            </TransformWrapper>
 
 
 

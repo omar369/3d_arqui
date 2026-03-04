@@ -164,7 +164,7 @@ function BuildingModel({
             emissive: isActive ? '#1d4ed8' : '#000000',
             emissiveIntensity: isActive ? 0.4 : 0,
             transparent: true,
-            opacity: isActive ? 0.3 : (isHovered ? 0.2 : 0.05),
+            opacity: isActive ? 0.3 : (isHovered ? 0.2 : 0.02),
             roughness: 0.2,
             metalness: 0.5,
             side: 2 as const,
@@ -182,96 +182,96 @@ function BuildingModel({
 
                 {/* Fachada Principal (Front Face) */}
                 <mesh
-                    position={[0, 0, 3.3]}
+                    position={[0, 0.9, 3.3]}
                     onPointerOver={(e) => handlePointerOver(e, 'front')}
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'front')}
                 >
-                    <planeGeometry args={[4.0, 4.4]} />
+                    <planeGeometry args={[2.0, 2.6]} />
                     <meshStandardMaterial {...getMaterialOptions('front')} />
                 </mesh>
 
                 {/* Esquina Frontal-Izquierda (Front-Left Face) */}
                 <mesh
-                    position={[-2.3, 0, 2.3]}
+                    position={[-2.3, 0.9, 2.3]}
                     rotation={[0, -Math.PI / 4, 0]}
                     onPointerOver={(e) => handlePointerOver(e, 'front_left')}
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'front_left')}
                 >
-                    <planeGeometry args={[3.0, 4.4]} />
+                    <planeGeometry args={[1.5, 2.6]} />
                     <meshStandardMaterial {...getMaterialOptions('front_left')} />
                 </mesh>
 
                 {/* Esquina Frontal-Derecha (Front-Right Face) */}
                 <mesh
-                    position={[2.3, 0, 2.3]}
+                    position={[2.3, 0.9, 2.3]}
                     rotation={[0, Math.PI / 4, 0]}
                     onPointerOver={(e) => handlePointerOver(e, 'front_right')}
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'front_right')}
                 >
-                    <planeGeometry args={[3.0, 4.4]} />
+                    <planeGeometry args={[1.5, 2.6]} />
                     <meshStandardMaterial {...getMaterialOptions('front_right')} />
                 </mesh>
 
                 {/* Vista Izquierda (Left Face) */}
                 <mesh
-                    position={[-3.3, 0, 0]}
+                    position={[-3.3, 0.9, 0]}
                     rotation={[0, -Math.PI / 2, 0]}
                     onPointerOver={(e) => handlePointerOver(e, 'left')}
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'left')}
                 >
-                    <planeGeometry args={[4.0, 4.4]} />
+                    <planeGeometry args={[2.0, 2.6]} />
                     <meshStandardMaterial {...getMaterialOptions('left')} />
                 </mesh>
 
                 {/* Vista Derecha (Right Face)  */}
                 <mesh
-                    position={[3.3, 0, 0]}
+                    position={[3.3, 0.9, 0]}
                     rotation={[0, Math.PI / 2, 0]}
                     onPointerOver={(e) => handlePointerOver(e, 'right')}
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'right')}
                 >
-                    <planeGeometry args={[4.0, 4.4]} />
+                    <planeGeometry args={[2.0, 2.6]} />
                     <meshStandardMaterial {...getMaterialOptions('right')} />
                 </mesh>
 
                 {/* Esquina Trasera-Izquierda (Back-Left Face) */}
                 <mesh
-                    position={[-2.3, 0, -2.3]}
+                    position={[-2.3, 0.9, -2.3]}
                     rotation={[0, -Math.PI * 0.75, 0]}
                     onPointerOver={(e) => handlePointerOver(e, 'back_left')}
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'back_left')}
                 >
-                    <planeGeometry args={[3.0, 4.4]} />
+                    <planeGeometry args={[1.5, 2.6]} />
                     <meshStandardMaterial {...getMaterialOptions('back_left')} />
                 </mesh>
 
                 {/* Esquina Trasera-Derecha (Back-Right Face) */}
                 <mesh
-                    position={[2.3, 0, -2.3]}
+                    position={[2.3, 0.9, -2.3]}
                     rotation={[0, Math.PI * 0.75, 0]}
                     onPointerOver={(e) => handlePointerOver(e, 'back_right')}
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'back_right')}
                 >
-                    <planeGeometry args={[3.0, 4.4]} />
+                    <planeGeometry args={[1.5, 2.6]} />
                     <meshStandardMaterial {...getMaterialOptions('back_right')} />
                 </mesh>
 
                 {/* Vista Trasera (Back Face) */}
                 <mesh
-                    position={[0, 0, -3.3]}
+                    position={[0, 0.9, -3.3]}
                     rotation={[0, Math.PI, 0]}
                     onPointerOver={(e) => handlePointerOver(e, 'back')}
                     onPointerOut={handlePointerOut}
                     onClick={(e) => handleClick(e, 'back')}
                 >
-                    <planeGeometry args={[4.0, 4.4]} />
+                    <planeGeometry args={[2.0, 2.6]} />
                     <meshStandardMaterial {...getMaterialOptions('back')} />
                 </mesh>
 
@@ -285,53 +285,6 @@ function BuildingModel({
                 >
                     <planeGeometry args={[6.6, 6.6]} />
                     <meshStandardMaterial {...getMaterialOptions('top')} />
-                </mesh>
-            </group>
-
-            {/* Interior Cubes Group */}
-            <group position={[0, 0, 0]}>
-                {/* Lobby Principal */}
-                <mesh
-                    position={[-1, 0.5, 1]}
-                    onPointerOver={(e) => handlePointerOver(e, 'interior_1')}
-                    onPointerOut={handlePointerOut}
-                    onClick={(e) => handleClick(e, 'interior_1')}
-                >
-                    <boxGeometry args={[0.5, 0.5, 0.5]} />
-                    <meshStandardMaterial {...getMaterialOptions('interior_1')} />
-                </mesh>
-
-                {/* Zona Norte */}
-                <mesh
-                    position={[1.5, 0.5, 0]}
-                    onPointerOver={(e) => handlePointerOver(e, 'interior_2')}
-                    onPointerOut={handlePointerOut}
-                    onClick={(e) => handleClick(e, 'interior_2')}
-                >
-                    <boxGeometry args={[0.5, 0.5, 0.5]} />
-                    <meshStandardMaterial {...getMaterialOptions('interior_2')} />
-                </mesh>
-
-                {/* Zona Sur */}
-                <mesh
-                    position={[-1.5, 0.5, -1]}
-                    onPointerOver={(e) => handlePointerOver(e, 'interior_3')}
-                    onPointerOut={handlePointerOut}
-                    onClick={(e) => handleClick(e, 'interior_3')}
-                >
-                    <boxGeometry args={[0.5, 0.5, 0.5]} />
-                    <meshStandardMaterial {...getMaterialOptions('interior_3')} />
-                </mesh>
-
-                {/* Pasillos */}
-                <mesh
-                    position={[0, 0.5, -2]}
-                    onPointerOver={(e) => handlePointerOver(e, 'interior_4')}
-                    onPointerOut={handlePointerOut}
-                    onClick={(e) => handleClick(e, 'interior_4')}
-                >
-                    <boxGeometry args={[0.5, 0.5, 0.5]} />
-                    <meshStandardMaterial {...getMaterialOptions('interior_4')} />
                 </mesh>
             </group>
         </group>
