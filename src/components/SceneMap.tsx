@@ -5,6 +5,41 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, ContactShadows, Environment, useGLTF } from '@react-three/drei';
 import { View, views } from '@/data/views';
 
+// Error Boundary para evitar que toda la página se rompa si falla el modelo 3D
+class ModelErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+    constructor(props: { children: React.ReactNode }) {
+        super(props);
+        this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error: any) {
+        return { hasError: true };
+    }
+
+    componentDidCatch(error: any, errorInfo: any) {
+        console.error("Error al cargar el modelo 3D desde el CDN:", error);
+    }
+
+    render() {
+        if (this.state.hasError) {
+            return (
+                <div className="w-full h-full flex flex-col items-center justify-center bg-slate-800/80 backdrop-blur-sm rounded-2xl border border-slate-700/50 shadow-inner">
+                    <svg className="w-10 h-10 text-slate-500 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p className="text-slate-300 text-sm font-medium text-center px-4">
+                        El modelo 3D no está disponible.
+                    </p>
+                    <p className="text-slate-500 text-xs text-center px-4 mt-1">
+                        Puedes seguir usando el menú interactivo.
+                    </p>
+                </div>
+            );
+        }
+        return this.props.children;
+    }
+}
+
 interface SceneMapProps {
     currentView: View;
     onSelectView: (view: View) => void;
@@ -15,23 +50,26 @@ export default function SceneMap({ currentView, onSelectView }: SceneMapProps) {
 
     return (
         <div className="relative w-full h-full bg-transparent">
-            <Canvas camera={{ position: [5, 4, 6], fov: 45 }}>
-                <ambientLight intensity={0.6} />
-                <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />
+            {/* Model Error Boundary Wrap */}
+            <ModelErrorBoundary>
+                <Canvas camera={{ position: [5, 4, 6], fov: 45 }}>
+                    <ambientLight intensity={0.6} />
+                    <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />
 
-                {/* Simple Building Representation */}
-                <group position={[0, -0.5, 0]}>
-                    <BuildingModel
-                        currentView={currentView}
-                        onSelectView={onSelectView}
-                        setHoveredView={setHoveredView}
-                    />
-                </group>
+                    {/* Simple Building Representation */}
+                    <group position={[0, -0.5, 0]}>
+                        <BuildingModel
+                            currentView={currentView}
+                            onSelectView={onSelectView}
+                            setHoveredView={setHoveredView}
+                        />
+                    </group>
 
-                <ContactShadows position={[0, -0.51, 0]} opacity={0.5} scale={15} blur={2.5} far={4} color="#1e293b" />
-                <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} enablePan={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2 + 0.1} />
-                <Environment preset="city" />
-            </Canvas>
+                    <ContactShadows position={[0, -0.51, 0]} opacity={0.5} scale={15} blur={2.5} far={4} color="#1e293b" />
+                    <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} enablePan={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2 + 0.1} />
+                    <Environment preset="city" />
+                </Canvas>
+            </ModelErrorBoundary>
 
             {/* Floating Hover Label */}
             {hoveredView && (
