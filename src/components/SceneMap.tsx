@@ -81,7 +81,7 @@ function BuildingModel({
     setHoveredView: (v: View | null) => void;
 }) {
     // TODO: Pega aquí la URL pública que te dio Supabase (Paso 5 de la imagen)
-    const MODEL_URL = 'https://arqui_3D.supabase.co/storage/v1/object/public/models/cafeteria_v2.glb';
+    const MODEL_URL = 'https://awtjgufmxargxdzrfdxr.supabase.co/storage/v1/object/public/models/cafeteria_v2.glb';
     const { scene } = useGLTF(MODEL_URL);
     const [localHover, setLocalHover] = React.useState<string | null>(null);
 
@@ -240,4 +240,4 @@ function BuildingModel({
 }
 
 // Recuerda actualizar esta URL también si la cambias arriba, o puedes usar la misma constante si la exportas.
-useGLTF.preload('https://arqui_3D.supabase.co/storage/v1/object/public/models/cafeteria_v2.glb');
+useGLTF.preload('https://awtjgufmxargxdzrfdxr.supabase.co/storage/v1/object/public/models/cafeteria_v2.glb');
