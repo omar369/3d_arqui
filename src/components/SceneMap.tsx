@@ -80,7 +80,9 @@ function BuildingModel({
     onSelectView: (v: View) => void;
     setHoveredView: (v: View | null) => void;
 }) {
-    const { scene } = useGLTF('/models/cafeteria_v2.glb');
+    // TODO: Pega aquí la URL pública que te dio Supabase (Paso 5 de la imagen)
+    const MODEL_URL = 'https://arqui-3D.supabase.co/storage/v1/object/public/models/cafeteria_v2.glb';
+    const { scene } = useGLTF(MODEL_URL);
     const [localHover, setLocalHover] = React.useState<string | null>(null);
 
     const handlePointerOver = (e: any, viewId: string) => {
@@ -237,4 +239,5 @@ function BuildingModel({
     );
 }
 
-useGLTF.preload('/models/cafeteria_v2.glb');
+// Recuerda actualizar esta URL también si la cambias arriba, o puedes usar la misma constante si la exportas.
+useGLTF.preload('https://arqui-3D.supabase.co/storage/v1/object/public/models/cafeteria_v2.glb');
